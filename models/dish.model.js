@@ -20,8 +20,8 @@ const Dish = sequelize.define("dishes", {
     type: Sequelize.INTEGER,
     allowNull: false
   },
-  isVeg: {
-    type: Sequelize.TINYINT,
+  type: {
+    type: Sequelize.STRING(100),
     allowNull: false
   },
   resturant_id: {

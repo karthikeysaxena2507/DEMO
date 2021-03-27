@@ -6,7 +6,7 @@ const getAllResturants = async(req, res, next) => {
         res.json(resturants);
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 
@@ -16,7 +16,7 @@ const getResturantById = async(req, res, next) => {
         res.json(resturant);
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 
@@ -28,12 +28,15 @@ const addResturant = async(req, res, next) => {
         }
         else {
             const data = {
+                username: req.body.username,
                 owner: req.body.owner,
                 name: req.body.name,
                 city: req.body.city,
                 state: req.body.state,
-                pincode: req.body.pincode,
-                pureVeg: req.body.pureVeg,
+                address: req.body.address,
+                createdAt: req.body.createdAt,
+                about: req.body.about,
+                resturant_type: req.body.resturantType,
                 cuisine: req.body.cuisine,
                 opensAt: req.body.opensAt,
                 closesAt: req.body.closesAt,
@@ -43,12 +46,30 @@ const addResturant = async(req, res, next) => {
         }
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
+    }
+}
+
+const getResturantIdByUser = async(req, res, next) => {
+    try {
+        const user = req.user;
+        if(user === null) {
+            res.json("DNE");
+        }
+        else {
+            const resturant = await Resturant.findOne({where: {username: user.username}});
+            if(resturant) res.json(resturant.id);
+            else res.json("DNE");
+        }
+    }
+    catch(err) {
+        res.json(next(err));
     }
 }
 
 module.exports = {
     getAllResturants,
     getResturantById,
-    addResturant
+    addResturant,
+    getResturantIdByUser
 }

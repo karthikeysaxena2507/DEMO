@@ -6,7 +6,7 @@ const getOffersByResturant = async(req, res, next) => {
         res.json(offers);
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 
@@ -29,7 +29,7 @@ const addOffer = async(req, res, next) => {
         }
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 

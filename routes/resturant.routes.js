@@ -8,4 +8,6 @@ router.get("/get/:id", resturantCtrl.getResturantById);
 
 router.post("/add", authMiddleware, resturantCtrl.addResturant);
 
+router.get("/check", authMiddleware, resturantCtrl.getResturantIdByUser);
+
 module.exports = router;

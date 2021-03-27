@@ -5,7 +5,7 @@ const Error = () => {
     <div className="text-center up">
         <h1> Error 404: Page Not Found </h1>
         <div>
-            <button onClick={() => window.location="/"} className="btn btn-dark mt-3 mb-3"> Login </button>
+            <button onClick={() => window.location="/login"} className="btn btn-dark mt-3 mb-3"> Login </button>
         </div>
         <h4> OR </h4>
         <div>

@@ -8,6 +8,14 @@ const Resturant = sequelize.define("resturants", {
     allowNull: false,
     primaryKey: true
   },
+  address: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  },
+  about: {
+    type: Sequelize.STRING(6000),
+    allowNull: false
+  },
   name: {
     type: Sequelize.STRING(100),
     allowNull: false
@@ -20,12 +28,8 @@ const Resturant = sequelize.define("resturants", {
     type: Sequelize.STRING(100),
     allowNull: false
   },
-  pincode: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
-  pureVeg: {
-    type: Sequelize.TINYINT,
+  resturant_type: {
+    type: Sequelize.STRING(100),
     allowNull: false
   },
   cuisine: {
@@ -33,14 +37,22 @@ const Resturant = sequelize.define("resturants", {
     allowNull: false
   },
   opensAt: {
-    type: Sequelize.TIME,
+    type: Sequelize.STRING(100),
     allowNull: false
   },
   closesAt: {
-    type: Sequelize.TIME,
+    type: Sequelize.STRING(100),
+    allowNull: false
+  },
+  createdAt: {
+    type: Sequelize.STRING(100),
     allowNull: false
   },
   owner: {
+    type: Sequelize.STRING(100),
+    allowNull: false
+  },
+  username: {
     type: Sequelize.STRING(100),
     allowNull: false
   }

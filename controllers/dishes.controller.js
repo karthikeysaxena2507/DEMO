@@ -6,7 +6,7 @@ const getDishesByResturant = async(req, res, next) => {
         res.json(dishes);
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 
@@ -21,7 +21,7 @@ const addDish = async(req, res, next) => {
                 name: req.body.name,
                 category: req.body.category,
                 price: req.body.price,
-                isVeg: req.body.isVeg,
+                type: req.body.type,
                 resturant_id: req.body.resturantId
             }
             const dish = await Dish.create(data);
@@ -29,7 +29,7 @@ const addDish = async(req, res, next) => {
         }
     }
     catch(error) {
-        console.log(next(error));
+        res.json(next(error));
     }
 }
 
