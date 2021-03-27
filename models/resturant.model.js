@@ -39,6 +39,10 @@ const Resturant = sequelize.define("resturants", {
   closesAt: {
     type: Sequelize.TIME,
     allowNull: false
+  },
+  owner: {
+    type: Sequelize.STRING(100),
+    allowNull: false
   }
 });
 

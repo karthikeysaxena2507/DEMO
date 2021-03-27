@@ -11,8 +11,15 @@ app.use(cors());
 app.use(express.json());
 app.use(session({secret: process.env.SESSION_SECRET, resave: true, saveUninitialized:true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
+
 const userRoutes = require("./routes/user.routes");
+const resturantRoutes = require("./routes/resturant.routes");
+const dishRoutes = require("./routes/dishes.routes");
+const offerRoutes = require("./routes/offer.routes");
 app.use("/users", userRoutes);
+app.use("/resturants", resturantRoutes);
+app.use("/dishes", dishRoutes);
+app.use("/offers", offerRoutes);
 
 if(process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
