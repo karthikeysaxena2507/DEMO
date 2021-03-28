@@ -8,6 +8,8 @@ import Navbar from "../Components/Navbar";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Loader from "../Components/Loader";
+import Item from "../Components/Item";
+import { CSVLink } from "react-csv";
 
 const MyResturant = () => {
 
@@ -25,16 +27,8 @@ const MyResturant = () => {
     const [category, setCategory] = useState("Select Catgeory");
     const [type, setType] = useState("Select Type");
     const [loading, setLoading] = useState(true);
-    // const [items, setItems] = useState([]);
-    // const [amount, setAmount] = useState(0);
-
-    // ITEM SCHEMA
-    // {
-    //     name:
-    //     price:
-    //     quantity:
-    //     amount:
-    // }
+    const [items, setItems] = useState([]);
+    const [netAmount, setNetAmount] = useState(0);
 
     useEffect(() => {
         const check = async() => {
@@ -129,7 +123,7 @@ const MyResturant = () => {
 
         const remove = async() => {
             try {
-                await axios.post(`/dishes/remove/${props.id}`);
+                await axios.post(`/dishes/remove/${props.id}`, {username});
                 const response = await axios.get(`/dishes/get/${id}`);
                 setDishes(response.data.filter((dish) => (dish.category === "Main Course")));
                 setStarters(response.data.filter((dish) => (dish.category === "Starters")));
@@ -143,7 +137,27 @@ const MyResturant = () => {
         }
 
         const addToBill = async() => {
-
+            const item = {
+                id: props.id,
+                name: props.name,
+                quantity: 1,
+                price: props.price,
+                amount: props.price
+            }
+            setNetAmount((prev) => (prev + props.price));
+            const undefinedIndex = items.findIndex((item) => (item.name === undefined));
+            (undefinedIndex > 0) && items.splice(undefinedIndex, 1);
+            let index = items.findIndex((item) => (Number(props.id) === Number(item.id)));
+            if(index === (-1)) {
+                setItems((prevItems) => [...prevItems, item])
+            }
+            else {
+                const newItems = [...items];
+                item.quantity = items[index].quantity + 1;
+                item.amount = items[index].amount + props.price;
+                newItems[index] = item;
+                setItems(newItems);
+            }
         }
 
         return <Dish
@@ -155,6 +169,44 @@ const MyResturant = () => {
             type = {props.type}
             remove = {() => remove()}
             add = {() => addToBill()}
+        />
+    }
+
+    const printBillItems = (props) => {
+
+        const removeFromBill = async() => {
+            setNetAmount((prev) => (prev - props.price));
+            const undefinedIndex = items.findIndex((item) => (item.name === undefined));
+            (undefinedIndex > 0) && items.splice(undefinedIndex, 1);
+            let index = items.findIndex((item) => (Number(props.id) === Number(item.id)));
+            const item = {
+                id: props.id,
+                name: props.name,
+                quantity: 1,
+                price: props.price,
+                amount: props.price
+            }
+            const newItems = [...items];
+            if(newItems[index].quantity === 1) {
+                newItems.splice(index, 1);
+                setItems(newItems);
+            }
+            else {
+                item.quantity = newItems[index].quantity - 1;
+                item.amount = newItems[index].amount - props.price;
+                newItems[index] = item;
+                setItems(newItems);
+            }
+        }
+
+        return <Item 
+            key = {props.id}
+            id = {props.id}
+            name = {props.name}
+            quantity = {props.quantity}
+            price = {props.price}
+            amount = {props.amount}
+            change = {() => removeFromBill()}
         />
     }
 
@@ -183,7 +235,7 @@ const MyResturant = () => {
             />
         </div>
         <div className="text-center">
-            <button type="button" className="btn btn-dark mt-3" onClick={() => window.location = `/edit/${id}`}> EDIT </button>
+            <button type="button" className="btn btn-dark expand mt-3" onClick={() => window.location = `/edit/${id}`}> EDIT </button>
         </div>
         <hr />
         <div>
@@ -251,11 +303,31 @@ const MyResturant = () => {
         </div>
         <div className="text-center mb-3">
             <div className="mt-2">{message}</div>
-            <button type="button" className="btn btn-dark mt-3" onClick={() =>addDish()}> ADD </button>
+            <button type="button" className="btn btn-dark mt-3 expand" onClick={() =>addDish()}> ADD </button>
         </div>
         <hr />
         <h4 className="text-center"> Make a Bill </h4>
-
+        <div>
+            {items.map(printBillItems)}
+        </div>
+        <div className="mt-3 amt text-center">
+             TOTAL AMOUNT (including 12% GST) = Rs {(netAmount + (0.12 * netAmount)).toFixed(2)} 
+        </div>
+        <div className="text-center mt-3">
+            <div className="btn btn-dark expand"> 
+                <CSVLink 
+                    filename={resturant.name + "'s Bill.csv"} 
+                    data={items} 
+                    onClick={() => {
+                        const undefinedIndex = items.findIndex((item) => (item.name === undefined));
+                        (undefinedIndex > 0) && items.splice(undefinedIndex, 1);
+                        setItems((prev) => [...prev, {amount: (netAmount + (0.12 * netAmount)).toFixed(2) + " (After Including 12% GST) "}]);
+                    }}
+                    className="bill expand" 
+                > Download Bill 
+                </CSVLink>
+            </div>
+        </div>
     </div>
     <Footer />
 </div>

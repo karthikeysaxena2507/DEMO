@@ -86,10 +86,25 @@ footer {
 }
 
 .dish {
-    border: 1px solid black;
-    border-radius: 5px;
+    border-radius: 8px;
+    border-bottom: 1px solid black;
     background-color: antiquewhite;
     padding: 7px 10px;
+}
+
+.amt {
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+.bill {
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.bill:hover {
+    text-decoration: none;
+    color: aliceblue;
 }
 
 .green {

@@ -12,8 +12,8 @@ const getDishesByResturant = async(req, res, next) => {
 
 const addDish = async(req, res, next) => {
     try {
-        const user = req.user.username;
-        if(user === null || user !== req.body.username) {
+        const user = req.user;
+        if(user === null || user.username !== req.body.username) {
             res.status(401).json({Error: "You Are Not Authenticated"});
         }
         else {
@@ -35,11 +35,17 @@ const addDish = async(req, res, next) => {
 
 const removeDish = async(req, res, next) => {
     try {
-        const dish = await Dish.findOne({where: {id: req.params.id}});
-        dish.destroy()
-        .then((response) => {
-            res.json(response);
-        });
+        const user = req.user;
+        if(user === null || user.username !== req.body.username) {
+            res.status(401).json({Error: "You Are Not Authenticated"});
+        }
+        else {
+            const dish = await Dish.findOne({where: {id: req.params.id}});
+            dish.destroy()
+            .then((response) => {
+                res.json(response);
+            });
+        }
     }
     catch(err) {
         res.json(next(err));

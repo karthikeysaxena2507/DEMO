@@ -282,7 +282,7 @@ const Create = () => {
                     { (percentage > 0) && <ProgressBar striped animated now={percentage} label={`${percentage}%`} />}
                 </div>
                 <div className="mt-2 mb-2 text-center"> {message} </div>
-                    <button type="button" className="btn btn-dark mt-3" onClick={() => add()}> ADD </button>
+                    <button type="button" className="btn btn-dark mt-3 expand" onClick={() => add()}> ADD </button>
                 </div>
             </form>
         </div>
