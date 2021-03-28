@@ -10,4 +10,6 @@ router.post("/add", authMiddleware, resturantCtrl.addResturant);
 
 router.get("/check", authMiddleware, resturantCtrl.getResturantIdByUser);
 
+router.post("/edit/:id", authMiddleware, resturantCtrl.editResturant);
+
 module.exports = router;

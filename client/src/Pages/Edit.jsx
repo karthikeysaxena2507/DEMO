@@ -7,9 +7,11 @@ import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import Loader from "../Components/Loader";
 import axios from "axios";
+import { useParams } from "react-router";
 
-const Create = () => {
-
+const Edit = () => {
+ 
+    const { id } = useParams();
     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(true);
     const [owner, setOwner] = useState("");
@@ -26,18 +28,15 @@ const Create = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [message, setMessage] = useState("");
     const [percentage, setPercentage] = useState(0);
-    const [id, setId] = useState(null);
 
     useEffect(() => {
         const check = async() => {
             try {
                 const result = await axios.get("/resturants/check");
-                if(result.data === "DNE") setId(null);
+                if(result.data === "DNE") window.location = "/";
                 else {
-                    setId(result.data);
-                    alert("You Have Already Added a resturant");
-                    window.location = `/myresturant/${result.data}`;
-                }
+                    if(result.data !== Number(id)) window.location = "/";
+                } 
                 const renewAccessToken = async() => {
                     const response = await axios.get("/users/auth");
                     if(response.data === "INVALID") {
@@ -56,6 +55,29 @@ const Create = () => {
                     }
                     window.location = "/login";
                 }
+
+                const fetch = async() => {
+                    try {
+                        const response = await axios.get(`/resturants/get/${id}`);
+                        setUsername(response.data.username);
+                        setOwner(response.data.owner);
+                        setName(response.data.name);
+                        setCity(response.data.city);
+                        setState(response.data.state);
+                        setAbout(response.data.about);
+                        setAddress(response.data.address);
+                        setResturantType(response.data.resturant_type);
+                        setCuisine(response.data.cuisine);
+                        setCreatedAt(response.data.createdAt);
+                        setClosesAt(response.data.closesAt);
+                        setOpensAt(response.data.opensAt);
+                        setImageUrl(response.data.imageUrl);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
+                }
+                fetch();
                 renewAccessToken();
                 setLoading(false);
                 const interval = setInterval(() => renewAccessToken(), 10*60*1000); // 10 mins
@@ -70,7 +92,7 @@ const Create = () => {
             }
         }   
         check(); 
-    },[]);
+    },[id]);
 
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
@@ -84,10 +106,10 @@ const Create = () => {
 
     const add = async (e) => {
         try {
-            setMessage("Adding your Restaurant, Please wait ...")
+            setMessage("Updating your Restaurant, Please wait ...")
             const data = {
-                data: imageUrl, username, name, owner, city, state, createdAt,
-                address, about, resturantType, cuisine, opensAt, closesAt,
+                data: imageUrl, username, name, owner, city, state, address,
+                about, resturantType, cuisine, opensAt, closesAt, createdAt,
             };
             const options = {
                 onUploadProgress: (ProgressEvent) => {
@@ -99,7 +121,7 @@ const Create = () => {
                 },
                 headers: {"Content-type": "application/json"}
             }
-            const response = await axios.post("/resturants/add", data, options);
+            const response = await axios.post(`/resturants/edit/${id}`, data, options);
             window.location = `/myresturant/${response.data.id}`;
         }
         catch(error) {
@@ -282,7 +304,7 @@ const Create = () => {
                     { (percentage > 0) && <ProgressBar striped animated now={percentage} label={`${percentage}%`} />}
                 </div>
                 <div className="mt-2 mb-2 text-center"> {message} </div>
-                    <button type="button" className="btn btn-dark mt-3" onClick={() => add()}> ADD </button>
+                    <button type="button" className="btn btn-dark mt-3" onClick={() => add()}> EDIT </button>
                 </div>
             </form>
         </div>
@@ -291,4 +313,4 @@ const Create = () => {
     );
 }
 
-export default Create;
+export default Edit;

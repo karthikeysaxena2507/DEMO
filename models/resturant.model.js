@@ -55,6 +55,9 @@ const Resturant = sequelize.define("resturants", {
   username: {
     type: Sequelize.STRING(100),
     allowNull: false
+  },
+  imageUrl: {
+    type: Sequelize.STRING(10000)
   }
 });
 

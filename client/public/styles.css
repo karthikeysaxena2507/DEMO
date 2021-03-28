@@ -77,3 +77,47 @@ footer {
     padding: 50px 10px;
     font-size: larger;
 }
+
+.rest {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: antiquewhite;
+}
+
+.dish {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: antiquewhite;
+    padding: 7px 10px;
+}
+
+.green {
+    height: 12px;
+    width: 12px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.red {
+    height: 12px;
+    width: 12px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.img {
+    cursor: pointer;
+}
+
+.expand {
+transition: all 0.3s ease-in-out !important;
+}
+
+.expand:hover {
+transform: scale(1.10) !important;
+cursor: pointer !important;
+}
+  

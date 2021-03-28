@@ -43,18 +43,17 @@ const Resturants = () => {
             cuisine = {props.cuisine}
             closesAt = {props.closesAt}
             opensAt = {props.opensAt}
+            imageUrl = {props.imageUrl}
         />
     }
 
     return (loading) ? <Loader /> :
     <div> 
-        <Navbar username = {null} id={id} />
-        <div className="upper-margin">
+        <Navbar username = {null} id = {id} />
+        <div className="upper-margin container">
             <Header />
-            <h3> All Resturants</h3>
-            <div className = "mt-4">
-                {resturants.map(printResturants)}
-            </div>
+            <h3 className="text-center mb-3 mt-3"> All Resturants</h3>
+            {resturants.map(printResturants)}
             <Footer />
         </div>
     </div>

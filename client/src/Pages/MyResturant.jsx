@@ -13,10 +13,15 @@ const MyResturant = () => {
 
     const { id } =  useParams();
     const [dishes, setDishes] = useState([]);
+    const [beverages, setBeverages] = useState([]);
+    const [desserts, setDesserts] = useState([]);
+    const [starters, setStarters] = useState([]);
+    const [breads, setBreads] = useState([]);
     const [resturant, setResturant] = useState({});
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [price, setPrice] = useState(0);
+    const [message, setMessage] = useState("");
     const [category, setCategory] = useState("Select Catgeory");
     const [type, setType] = useState("Select Type");
     const [loading, setLoading] = useState(true);
@@ -48,8 +53,17 @@ const MyResturant = () => {
 
                 const fetch = async() => {
                     try {
+                        const res = await axios.get("/resturants/check");
+                        if(res.data === "DNE") window.location = "/";
+                        else {
+                            if(res.data !== Number(id)) window.location = "/";
+                        }
                         const response = await axios.get(`/dishes/get/${id}`);
-                        setDishes(response.data);
+                        setDishes(response.data.filter((dish) => (dish.category === "Main Course")));
+                        setStarters(response.data.filter((dish) => (dish.category === "Starters")));
+                        setBeverages(response.data.filter((dish) => (dish.category === "Beverages")));
+                        setBreads(response.data.filter((dish) => (dish.category === "Bread")));
+                        setDesserts(response.data.filter((dish) => (dish.category === "Desserts")));
                         const result = await axios.get(`/resturants/get/${id}`);
                         setResturant(result.data);
                     }
@@ -84,6 +98,7 @@ const MyResturant = () => {
 
     const addDish = async() => {
         try {
+            setMessage("Adding Dish To Menu ....");
             const data = {
                 username,
                 name,
@@ -92,8 +107,18 @@ const MyResturant = () => {
                 type,
                 resturantId: resturant.id
             }
-            const response = await axios.post("/dishes/add", data);
-            console.log(response.data);
+            await axios.post("/dishes/add", data);
+            const response = await axios.get(`/dishes/get/${id}`);
+            setDishes(response.data.filter((dish) => (dish.category === "Main Course")));
+            setStarters(response.data.filter((dish) => (dish.category === "Starters")));
+            setBeverages(response.data.filter((dish) => (dish.category === "Beverages")));
+            setBreads(response.data.filter((dish) => (dish.category === "Bread")));
+            setDesserts(response.data.filter((dish) => (dish.category === "Desserts")));
+            setPrice(0);
+            setName("");
+            setCategory("Select Category");
+            setType("Select Type");
+            setMessage("");
         }
         catch(err) {
             console.log(err);
@@ -101,13 +126,35 @@ const MyResturant = () => {
     }
 
     const printDishes = (props) => {
+
+        const remove = async() => {
+            try {
+                await axios.post(`/dishes/remove/${props.id}`);
+                const response = await axios.get(`/dishes/get/${id}`);
+                setDishes(response.data.filter((dish) => (dish.category === "Main Course")));
+                setStarters(response.data.filter((dish) => (dish.category === "Starters")));
+                setBeverages(response.data.filter((dish) => (dish.category === "Beverages")));
+                setBreads(response.data.filter((dish) => (dish.category === "Bread")));
+                setDesserts(response.data.filter((dish) => (dish.category === "Desserts")));
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+
+        const addToBill = async() => {
+
+        }
+
         return <Dish
             key = {props.id}
             id = {props.id}
             name = {props.name}
             category = {props.category}
             price = {props.price}
-            isVeg = {props.isVeg}
+            type = {props.type}
+            remove = {() => remove()}
+            add = {() => addToBill()}
         />
     }
 
@@ -116,10 +163,7 @@ const MyResturant = () => {
     <Navbar username={username} id = {id}/>
     <div className="upper-margin container">
         <Header username = {username} />
-        <h3> {resturant.name} </h3>
-        <div>
-            {dishes.map(printDishes)}
-        </div>
+        <h3 className="text-center mt-3"> My Resturant </h3>
         <div>
             <Resturant
                 key = {resturant.id}
@@ -134,10 +178,26 @@ const MyResturant = () => {
                 cuisine = {resturant.cuisine}
                 closesAt = {resturant.closesAt}
                 opensAt = {resturant.opensAt}
+                imageUrl = {resturant.imageUrl}
+                hide = {true}
             />
         </div>
+        <div className="text-center">
+            <button type="button" className="btn btn-dark mt-3" onClick={() => window.location = `/edit/${id}`}> EDIT </button>
+        </div>
         <hr />
-        <h4 className="text-center"> <b> Add a New Dish </b> </h4>
+        <div>
+        <h3 className="text-center mt-3"> Menu </h3>
+        <div>
+            <div className="mt-2 text-center"><b>BEVERAGES: </b> <div> {beverages.map(printDishes)} </div></div>
+            <div className="mt-2 text-center"><b>STARTERS: </b><div> {starters.map(printDishes)} </div></div>
+            <div className="mt-2 text-center"><b>MAIN COURSE: </b><div> {dishes.map(printDishes)} </div></div>
+            <div className="mt-2 text-center"><b>BREAD: </b><div> {breads.map(printDishes)} </div></div>
+            <div className="mt-2 text-center"><b>DESSERTS: </b><div> {desserts.map(printDishes)} </div></div>
+        </div>
+        </div>
+        <hr />
+        <h3 className="text-center mt-3"> Add a new dish </h3>
         <div className="row text-center">
             <div className="mt-2 col-md-3 text-center">
                 <b> Name of Dish </b>
@@ -190,10 +250,11 @@ const MyResturant = () => {
             </div>
         </div>
         <div className="text-center mb-3">
+            <div className="mt-2">{message}</div>
             <button type="button" className="btn btn-dark mt-3" onClick={() =>addDish()}> ADD </button>
         </div>
         <hr />
-        <h4 className="text-center"> <b> Make a Bill </b> </h4>
+        <h4 className="text-center"> Make a Bill </h4>
 
     </div>
     <Footer />

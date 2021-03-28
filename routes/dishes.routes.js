@@ -6,4 +6,6 @@ router.get("/get/:id", dishesCtrl.getDishesByResturant);
 
 router.post("/add", authMiddleware, dishesCtrl.addDish);
 
+router.post("/remove/:id", authMiddleware, dishesCtrl.removeDish);
+
 module.exports = router;

@@ -33,7 +33,21 @@ const addDish = async(req, res, next) => {
     }
 }
 
+const removeDish = async(req, res, next) => {
+    try {
+        const dish = await Dish.findOne({where: {id: req.params.id}});
+        dish.destroy()
+        .then((response) => {
+            res.json(response);
+        });
+    }
+    catch(err) {
+        res.json(next(err));
+    }
+}
+
 module.exports = {
     getDishesByResturant,
-    addDish
+    addDish,
+    removeDish
 }
