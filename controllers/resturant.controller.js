@@ -1,5 +1,6 @@
 const Resturant = require("../models/resturant.model");
 const { cloudinary } = require("../utils/cloudinary");
+const helper = require("../helper/index");
 
 const getAllResturants = async(req, res, next) => {
     try {
@@ -38,19 +39,19 @@ const addResturant = async(req, res, next) => {
                 imageUrl = uploadedResponse.url;
             }
             const data = {
-                username: req.body.username,
-                owner: req.body.owner,
-                name: req.body.name,
-                city: req.body.city,
-                state: req.body.state,
-                address: req.body.address,
-                createdAt: req.body.createdAt,
-                about: req.body.about,
-                resturant_type: req.body.resturantType,
-                cuisine: req.body.cuisine,
-                opensAt: req.body.opensAt,
-                closesAt: req.body.closesAt,
-                imageUrl
+                username: helper.sanitize(req.body.username),
+                owner: helper.sanitize(req.body.owner),
+                name: helper.sanitize(req.body.name),
+                city: helper.sanitize(req.body.city),
+                state: helper.sanitize(req.body.state),
+                address: helper.sanitize(req.body.address),
+                createdAt: helper.sanitize(req.body.createdAt),
+                about: helper.sanitize(req.body.about),
+                resturant_type: helper.sanitize(req.body.resturantType),
+                cuisine: helper.sanitize(req.body.cuisine),
+                opensAt: helper.sanitize(req.body.opensAt),
+                closesAt: helper.sanitize(req.body.closesAt),
+                imageUrl: helper.sanitize(imageUrl)
             }
             const resturant = await Resturant.create(data);
             res.json(resturant);
@@ -95,19 +96,19 @@ const editResturant = async(req, res, next) => {
                 });
                 imageUrl = uploadedResponse.url;
             }
-            resturant.username= req.body.username,
-            resturant.owner = req.body.owner,
-            resturant.name = req.body.name,
-            resturant.city = req.body.city,
-            resturant.state = req.body.state,
-            resturant.address = req.body.address,
-            resturant.createdAt = req.body.createdAt,
-            resturant.about = req.body.about,
-            resturant.resturant_type = req.body.resturantType,
-            resturant.cuisine = req.body.cuisine,
-            resturant.opensAt = req.body.opensAt,
-            resturant.closesAt = req.body.closesAt,
-            resturant.imageUrl = imageUrl
+            resturant.username= helper.sanitize(req.body.username);
+            resturant.owner = helper.sanitize(req.body.owner);
+            resturant.name = helper.sanitize(req.body.name);
+            resturant.city = helper.sanitize(req.body.city);
+            resturant.state = helper.sanitize(req.body.state);
+            resturant.address = helper.sanitize(req.body.address);
+            resturant.createdAt = helper.sanitize(req.body.createdAt);
+            resturant.about = helper.sanitize(req.body.about);
+            resturant.resturant_type = helper.sanitize(req.body.resturantType);
+            resturant.cuisine = helper.sanitize(req.body.cuisine);
+            resturant.opensAt = helper.sanitize(req.body.opensAt);
+            resturant.closesAt = helper.sanitize(req.body.closesAt);
+            resturant.imageUrl = helper.sanitize(imageUr);
             resturant.save()
             .then((response) => {
                 res.json(response);

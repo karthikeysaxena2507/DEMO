@@ -1,4 +1,5 @@
 const Offer = require("../models/offer.model");
+const helper = require("../helper/index");
 
 const getOffersByResturant = async(req, res, next) => {
     try {
@@ -18,11 +19,11 @@ const addOffer = async(req, res, next) => {
         }
         else {
             const data = {
-                name: req.body.name,
-                discount: req.body.discount,
-                start_date: req.body.startDate,
-                end_date: req.body.endDate,
-                resturant_id: req.body.resturantId
+                name: helper.sanitize(req.body.name),
+                discount: helper.sanitize(req.body.discount),
+                start_date: helper.sanitize(req.body.startDate),
+                end_date: helper.sanitize(req.body.endDate),
+                resturant_id: helper.sanitize(req.body.resturantId)
             }
             const offer = await Offer.create(data);
             res.json(offer);

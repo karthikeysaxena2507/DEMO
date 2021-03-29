@@ -1,4 +1,5 @@
 const Dish = require("../models/dish.model");
+const helper = require("../helper/index");
 
 const getDishesByResturant = async(req, res, next) => {
     try {
@@ -18,11 +19,11 @@ const addDish = async(req, res, next) => {
         }
         else {
             const data = {
-                name: req.body.name,
-                category: req.body.category,
-                price: req.body.price,
-                type: req.body.type,
-                resturant_id: req.body.resturantId
+                name: helper.sanitize(req.body.name),
+                category: helper.sanitize(req.body.category),
+                price: helper.sanitize(req.body.price),
+                type: helper.sanitize(req.body.type),
+                resturant_id: helper.sanitize(req.body.resturantId)
             }
             const dish = await Dish.create(data);
             res.json(dish);
