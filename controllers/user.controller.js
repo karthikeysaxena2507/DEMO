@@ -95,7 +95,7 @@ const loginUser = async(req, res, next) => {
                                     res.cookie("token", accessToken, {
                                         httpOnly: true,
                                         secure: true,
-                                        sameSite: true,
+                                        sameSite: "strict",
                                     });
                                     res.json({username: user.dataValues.username, email});
                                 }
